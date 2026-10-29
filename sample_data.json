@@ -1,5 +1,6 @@
 [
-  {"source_url":"sample://1","title":"示例 · 近地铁两居","city":"上海","district":"浦东","community":"春晓花园","total_price":328,"unit_price":51250,"area":64,"rooms":"2室1厅","year":2008,"subway_minutes":8,"commute_minutes":38,"school_score":72,"risk_score":28,"notes":"演示数据，非真实房源"},
-  {"source_url":"sample://2","title":"示例 · 次新三居","city":"苏州","district":"工业园区","community":"湖畔新城","total_price":365,"unit_price":39800,"area":91.7,"rooms":"3室2厅","year":2018,"subway_minutes":14,"commute_minutes":46,"school_score":78,"risk_score":22,"notes":"演示数据，非真实房源"},
-  {"source_url":"sample://3","title":"示例 · 老城小户型","city":"南京","district":"鼓楼","community":"中央门社区","total_price":245,"unit_price":44500,"area":55.1,"rooms":"2室1厅","year":1996,"subway_minutes":6,"commute_minutes":31,"school_score":66,"risk_score":43,"notes":"演示数据，非真实房源"}
+  {"source_url":"sample://xa-1","title":"演示 · 曲江改善三居","city":"西安","district":"雁塔","community":"曲江城市花园","total_price":238,"unit_price":22450,"area":106,"rooms":"3室2厅","year":2016,"subway_minutes":10,"commute_minutes":32,"school_score":76,"risk_score":24,"notes":"演示数据，非真实房源"},
+  {"source_url":"sample://xa-2","title":"演示 · 经开地铁三居","city":"西安","district":"未央","community":"经开壹号","total_price":185,"unit_price":19070,"area":97,"rooms":"3室2厅","year":2018,"subway_minutes":7,"commute_minutes":38,"school_score":69,"risk_score":20,"notes":"演示数据，非真实房源"},
+  {"source_url":"sample://cq-1","title":"演示 · 照母山改善房","city":"重庆","district":"渝北","community":"照母山云境","total_price":218,"unit_price":20280,"area":107.5,"rooms":"3室2厅","year":2020,"subway_minutes":13,"commute_minutes":36,"school_score":74,"risk_score":22,"notes":"演示数据，非真实房源"},
+  {"source_url":"sample://cq-2","title":"演示 · 观音桥两居","city":"重庆","district":"江北","community":"观音桥新城","total_price":175,"unit_price":18230,"area":96,"rooms":"2室2厅","year":2012,"subway_minutes":6,"commute_minutes":28,"school_score":67,"risk_score":29,"notes":"演示数据，非真实房源"}
 ]

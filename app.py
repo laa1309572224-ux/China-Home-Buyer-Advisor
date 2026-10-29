@@ -31,6 +31,11 @@ def db():
             listing_id INTEGER NOT NULL, observed_at TEXT NOT NULL, total_price REAL NOT NULL,
             UNIQUE(listing_id, observed_at), FOREIGN KEY(listing_id) REFERENCES listings(id)
         );
+        CREATE TABLE IF NOT EXISTS transactions (
+            id INTEGER PRIMARY KEY, city TEXT NOT NULL, district TEXT DEFAULT '',
+            community TEXT NOT NULL, deal_date TEXT NOT NULL, total_price REAL NOT NULL,
+            unit_price REAL NOT NULL, area REAL NOT NULL, source TEXT DEFAULT ''
+        );
     """)
     try:
         yield connection
@@ -85,6 +90,20 @@ def score(item, prefs):
     return {"score": total, "decision": decision, "parts": {k: round(v, 1) for k, v in parts.items()}}
 
 
+def loan_plan(total_price, down_payment_ratio, annual_rate, years):
+    total = float(total_price) * 10000
+    ratio = float(down_payment_ratio) / 100
+    months = int(years) * 12
+    if total <= 0 or not 0 <= ratio < 1 or not 0 <= float(annual_rate) <= 20 or months <= 0:
+        raise ValueError("贷款参数无效")
+    principal = total * (1 - ratio)
+    monthly_rate = float(annual_rate) / 100 / 12
+    payment = principal / months if monthly_rate == 0 else principal * monthly_rate * (1 + monthly_rate) ** months / ((1 + monthly_rate) ** months - 1)
+    return {"principal": round(principal, 2), "down_payment": round(total * ratio, 2),
+            "monthly_payment": round(payment, 2), "total_interest": round(payment * months - principal, 2),
+            "months": months}
+
+
 def collect(url):
     parsed = urlparse(url)
     host = parsed.hostname or ""
@@ -134,6 +153,18 @@ class Handler(SimpleHTTPRequestHandler):
             return self.send_json(rows)
         if self.path == "/api/health":
             return self.send_json({"ok": True})
+        if self.path.startswith("/api/transactions"):
+            city = self.path.partition("city=")[2]
+            with db() as conn:
+                rows = [dict(r) for r in conn.execute(
+                    "SELECT * FROM transactions WHERE city=? OR ?='' ORDER BY deal_date DESC", (city, city))]
+            return self.send_json(rows)
+        if self.path.startswith("/api/transactions"):
+            city = self.path.partition("city=")[2]
+            with db() as conn:
+                rows = [dict(r) for r in conn.execute(
+                    "SELECT * FROM transactions WHERE city LIKE ? ORDER BY deal_date DESC", (city or "%",))]
+            return self.send_json(rows)
         return super().do_GET()
 
     def do_POST(self):
@@ -151,6 +182,9 @@ class Handler(SimpleHTTPRequestHandler):
                 with db() as conn:
                     rows = [dict(r) for r in conn.execute("SELECT * FROM listings")]
                 return self.send_json([{**row, **score(row, prefs)} for row in rows])
+            if self.path == "/api/loan":
+                return self.send_json(loan_plan(body.get("total_price"), body.get("down_payment_ratio", 30),
+                                                body.get("annual_rate", 3.1), body.get("years", 30)))
             self.send_error(404)
         except (ValueError, json.JSONDecodeError) as error:
             self.send_json({"error": str(error)}, 400)
@@ -159,11 +193,18 @@ class Handler(SimpleHTTPRequestHandler):
 
 
 def seed():
-    with db() as conn:
-        if conn.execute("SELECT COUNT(*) FROM listings").fetchone()[0]:
-            return
     for item in json.loads((ROOT / "sample_data.json").read_text(encoding="utf-8")):
-        save_listing(item)
+        with db() as conn:
+            exists = conn.execute("SELECT 1 FROM listings WHERE source_url=?", (item["source_url"],)).fetchone()
+        if not exists:
+            save_listing(item)
+    with db() as conn:
+        if not conn.execute("SELECT 1 FROM transactions").fetchone():
+            conn.executemany("INSERT INTO transactions(city,district,community,deal_date,total_price,unit_price,area,source) VALUES(?,?,?,?,?,?,?,?)", [
+                ("西安", "雁塔", "曲江城市花园", "2026-09-18", 228, 21800, 104.6, "演示成交样本"),
+                ("西安", "未央", "经开壹号", "2026-08-26", 176, 18150, 97, "演示成交样本"),
+                ("重庆", "渝北", "照母山云境", "2026-09-12", 205, 19400, 105.7, "演示成交样本"),
+                ("重庆", "江北", "观音桥新城", "2026-08-09", 168, 17400, 96.5, "演示成交样本")])
 
 
 if __name__ == "__main__":

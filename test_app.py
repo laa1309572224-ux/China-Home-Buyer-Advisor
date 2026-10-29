@@ -33,6 +33,14 @@ class AppTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             app.collect("https://example.com/house/1")
 
+    def test_mortgage_plan(self):
+        plan = app.loan_plan(200, 30, 3.1, 30)
+        self.assertEqual(1400000, plan["principal"])
+        self.assertGreater(plan["monthly_payment"], 5000)
+        self.assertLess(plan["monthly_payment"], 7000)
+        with self.assertRaises(ValueError):
+            app.loan_plan(200, 100, 3.1, 30)
+
 
 if __name__ == "__main__":
     unittest.main()
