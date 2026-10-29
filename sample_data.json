@@ -1,0 +1,5 @@
+[
+  {"source_url":"sample://1","title":"示例 · 近地铁两居","city":"上海","district":"浦东","community":"春晓花园","total_price":328,"unit_price":51250,"area":64,"rooms":"2室1厅","year":2008,"subway_minutes":8,"commute_minutes":38,"school_score":72,"risk_score":28,"notes":"演示数据，非真实房源"},
+  {"source_url":"sample://2","title":"示例 · 次新三居","city":"苏州","district":"工业园区","community":"湖畔新城","total_price":365,"unit_price":39800,"area":91.7,"rooms":"3室2厅","year":2018,"subway_minutes":14,"commute_minutes":46,"school_score":78,"risk_score":22,"notes":"演示数据，非真实房源"},
+  {"source_url":"sample://3","title":"示例 · 老城小户型","city":"南京","district":"鼓楼","community":"中央门社区","total_price":245,"unit_price":44500,"area":55.1,"rooms":"2室1厅","year":1996,"subway_minutes":6,"commute_minutes":31,"school_score":66,"risk_score":43,"notes":"演示数据，非真实房源"}
+]

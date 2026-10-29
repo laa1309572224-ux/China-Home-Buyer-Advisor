@@ -1,0 +1,4 @@
+__pycache__/
+*.pyc
+home_buyer.db
+test_home_buyer.db
